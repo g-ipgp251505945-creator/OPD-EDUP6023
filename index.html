@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OPD - Alat Berfikir Cemerlang</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --cream: #FFF8F3; --blush-pink: #FADADD; --sage-green: #D8E8D2; --lavender: #E8E2F8; --beige: #F5EBE6; --white: #FFFFFF; --dusty-rose: #EFC9D2; --charcoal: #332C2B; --muted: #6B5E5C;
+            --shadow: 0 10px 30px rgba(239, 201, 210, 0.25); --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--cream); color: var(--charcoal); overflow-x: hidden; line-height: 1.6; }
+        h1, h2, h3, h4 { font-family: 'Playfair Display', serif; color: var(--charcoal); }
+        #loading-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--cream); z-index: 9999; display: flex; flex-direction: column;
+        justify-content: center; align-items: center; transition: opacity 0.4s ease; }
+        .spinner { width: 50px; height: 50px; border: 5px solid var(--white); border-top: 5px solid var(--dusty-rose); border-radius: 50%;
+        animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .floral-bg { position: fixed; pointer-events: none; z-index: -1; opacity: 0.3; animation: float 8s ease-in-out infinite alternate; color: var(--dusty-rose); }
+        .fl-1 { top: 10%; left: -2%; font-size: 6rem; } .fl-2 { bottom: 10%; right: -2%; font-size: 7rem; animation-delay: 2s; }
+        @keyframes float { 0% { transform: translateY(0) rotate(0deg); } 100% { transform: translateY(-20px) rotate(10deg); } }
+        header { background: rgba(255, 248, 243, 0.8); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.5); position: sticky; top: 0;
+        z-index: 900; }
+        .nav-container { max-width: 1100px; margin: 0 auto; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .brand { text-decoration: none; display: flex; align-items: center; gap: 8px; font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--charcoal); font-weight: 700;
+        }
+        .navbar-links { display: flex; list-style: none; gap: 10px; }
+        .navbar-links a { text-decoration: none; color: var(--muted); font-size: 0.85rem; padding: 6px 14px; border-radius: 20px; transition: var(--transition); }
+        .navbar-links a:hover, .navbar-links a.active-nav { background: var(--white); color: var(--charcoal); box-shadow: var(--shadow); }
+        .menu-toggle { display: none; font-size: 1.2rem; cursor: pointer; }
+        .breadcrumb-wrapper { max-width: 1100px; margin: 15px auto 0 auto; padding: 0 20px; }
+        .breadcrumb { display: flex; list-style: none; font-size: 0.8rem; background: var(--white); padding: 8px 16px; border-radius: 20px; box-shadow: var(--shadow); inline-flex; gap: 5px;
+        }
+        .breadcrumb a { text-decoration: none; color: var(--dusty-rose); }
+        .breadcrumb li::after { content: "\f105"; font-family: "Font Awesome 6 Free"; font-weight: 900; margin-left: 5px; color: var(--muted); }
+        .breadcrumb li:last-child::after { content: ""; }
+        .btn { position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 6px; padding: 10px 22px; border-radius: 25px; border: none;
+        font-family: 'Poppins', sans-serif; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: var(--transition); text-decoration: none; }
+        .btn-primary { background: linear-gradient(135deg, var(--dusty-rose), var(--blush-pink)); color: var(--charcoal); box-shadow: var(--shadow); }
+        .btn-primary:hover { transform: translateY(-2px); }
+        .btn-secondary { background: var(--white); color: var(--charcoal); border: 1px solid rgba(239,201,210,0.4); }
+        main { max-width: 1100px; margin: 0 auto; padding: 25px 20px; min-height: 60vh; }
+        .page-container { display: none; }
+        .page-container.active-page { display: block; animation: fIn 0.5s ease forwards; }
+        @keyframes fIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .hero { text-align: center; padding: 40px 10px; max-width: 750px; margin: 0 auto; }
+        .hero h1 { font-size: 2.2rem; margin-bottom: 8px; }
+        .hero h2 { font-size: 1.3rem; color: var(--dusty-rose); margin-bottom: 20px; }
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 20px; margin-top: 15px; }
+        .abc-card { background: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,0.6); backdrop-filter: blur(5px); border-radius: 20px; padding: 25px; box-shadow: var(--shadow); display: flex; flex-direction: column;
+        justify-content: space-between; transition: var(--transition); }
+        .abc-card:hover { transform: translateY(-5px); background: var(--white); }
+        .card-meta { font-size: 0.75rem; font-weight: 600; color: var(--dusty-rose); text-transform: uppercase; letter-spacing: 1px; }
+        .abc-card h3 { font-size: 1.4rem; margin: 5px 0 10px 0; }
+        .abc-card p { font-size: 0.85rem; color: var(--muted); margin-bottom: 20px; flex-grow: 1; }
+        .c-1 { border-left: 4px solid var(--blush-pink); } .c-2 { border-left: 4px solid var(--sage-green); } .c-3 { border-left: 4px solid var(--lavender);
+        } .c-4 { border-left: 4px solid var(--dusty-rose); }
+        .page-header-box { background: var(--white); padding: 25px; border-radius: 20px; margin-bottom: 20px; box-shadow: var(--shadow); }
+        .page-header-box h2 { font-size: 1.6rem; }
+        .page-header-box .sub { font-size: 0.95rem; color: var(--dusty-rose); }
+        .theory-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+        @media (max-width: 850px) { .theory-layout { grid-template-columns: 1fr; } }
+        .theory-main-card { background: var(--white); border-radius: 20px; padding: 25px; box-shadow: var(--shadow); }
+        .content-section { margin-bottom: 25px; }
+        .content-section h3 { font-size: 1.15rem; margin-bottom: 10px; border-bottom: 2px solid var(--cream); padding-bottom: 5px; }
+        .content-section h3 i { color: var(--dusty-rose); margin-right: 5px; }
+        .content-section p, .content-section li { font-size: 0.9rem; color: var(--muted); }
+        .content-section ul { padding-left: 15px; }
+        .pdp-box { background: var(--cream); border-left: 4px solid var(--dusty-rose); padding: 15px; border-radius: 0 12px 12px 0; margin-top: 10px; font-size: 0.85rem; }
+        .sticky-sidebar { position: sticky; top: 80px; background: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.6); border-radius: 20px; padding: 20px; box-shadow: var(--shadow); text-align: center;
+        height: fit-content; }
+        .sidebar-buttons { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+        .step-navigation-footer { margin-top: 30px; padding-top: 15px; border-top: 2px solid var(--cream); display: flex; justify-content: space-between; }
+        .pyramid-wrapper { margin: 20px 0; display: flex; flex-direction: column; gap: 4px; width: 100%; max-width: 400px; margin: 15px auto; }
+        .tier { width: 100%; padding: 10px; text-align: center; font-weight: 600; font-size: 0.8rem; border-radius: 6px; }
+        .t-6 { width: 50%; margin: 0 auto; background: #FADADD; } .t-5 { width: 60%; margin: 0 auto; background: #F3E1E4;
+        } .t-4 { width: 70%; margin: 0 auto; background: #E8E2F8; } .t-3 { width: 80%; margin: 0 auto; background: #E0DCED;
+        } .t-2 { width: 90%; margin: 0 auto; background: #D8E8D2; } .t-1 { width: 100%; background: #CEDDD8; }
+        .quiz-container, .assessment-container { background: var(--white); border-radius: 20px; padding: 25px; box-shadow: var(--shadow); }
+        .quiz-status-bar { background: var(--cream); padding: 15px; border-radius: 12px; margin-bottom: 20px; }
+        .quiz-status-meta { display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 600; margin-bottom: 5px; }
+        .progress-bar-bg { width: 100%; height: 8px; background: var(--white); border-radius: 10px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; width: 0%; background: var(--dusty-rose); transition: width 0.3s; }
+        .question-card { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--cream); }
+        .question-text { font-size: 0.95rem; font-weight: 600; margin-bottom: 10px; }
+        .options-list { display: flex; flex-direction: column; gap: 8px; }
+        .option-label { display: flex; align-items: center; gap: 10px; padding: 10px 15px; background: var(--cream); border-radius: 10px; cursor: pointer; font-size: 0.88rem;
+        transition: var(--transition); }
+        .option-label:hover { background: var(--white); border: 1px solid var(--blush-pink); }
+        .score-view-box { text-align: center; padding: 20px; background: var(--lavender); border-radius: 15px; margin-top: 15px; display: none; }
+        .score-num { font-size: 2.5rem; font-family: 'Playfair Display', serif; font-weight: 700; }
+        .input-group textarea { width: 100%; min-height: 140px; padding: 12px; border-radius: 12px; border: 1px solid #E2D3D1; background: var(--cream); font-family: inherit;
+        font-size: 0.9rem; resize: vertical; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.3); backdrop-filter: blur(3px); z-index: 1000; display: flex;
+        justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+        .modal-overlay.modal-open { opacity: 1; pointer-events: auto; }
+        .modal-window { background: var(--white); border-radius: 20px; padding: 30px 20px; max-width: 400px; width: 90%; text-align: center; box-shadow: var(--shadow); }
+        .modal-icon-container { width: 60px; height: 60px; border-radius: 50%; background: var(--sage-green); display: flex; justify-content: center; align-items: center; font-size: 1.5rem;
+        margin: 0 auto 15px auto; }
+        footer { background: var(--white); border-top: 1px solid rgba(239,201,210,0.3); padding: 25px 10px; text-align: center; margin-top: 40px; font-size: 0.8rem; }
+        @media (max-width: 768px) { .navbar-links { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; width: 100%; background: var(--cream);
+        padding: 15px; box-shadow: var(--shadow); gap: 5px; } .navbar-links.mobile-open { display: flex; } .menu-toggle { display: block; } }
+    </style>
+</head>
+<body>
+    <div id="loading-screen"><div class="spinner"></div><div style="margin-top:10px; font-size:0.9rem; color:var(--muted)">Sila Tunggu...</div></div>
+    <div class="floral-bg fl-1"><i class="fa-solid fa-spa"></i></div>
+    <div class="floral-bg fl-2"><i class="fa-solid fa-leaf"></i></div>
+    
+    <header>
+        <div class="nav-container">
+            <a href="#" class="brand" onclick="showPage('home')"><i class="fa-solid fa-florin-sign"></i> OPD ABC</a>
+            <div class="menu-toggle" onclick="toggleMobileNav()"><i class="fa-solid fa-bars"></i></div>
+            <ul class="navbar-links" id="nav-menu">
+                <li><a href="#" id="nav-home" onclick="showPage('home')">🏠 Home</a></li>
+                <li><a href="#" id="nav-abc1" onclick="showPage('abc1')">ABC 1</a></li>
+                <li><a href="#" id="nav-abc2" onclick="showPage('abc2')">ABC 2</a></li>
+                <li><a href="#" id="nav-abc3" onclick="showPage('abc3')">ABC 3</a></li>
+                <li><a href="#" id="nav-abc4" onclick="showPage('abc4')">ABC 4</a></li>
+            </ul>
+        </div>
+    </header>
+    
+    <div class="breadcrumb-wrapper">
+        <ul class="breadcrumb">
+            <li style="display:inline"><a href="#" onclick="showPage('home')">Home</a></li>
+            <li id="breadcrumb-active" style="display:inline; color:var(--muted)">Dashboard</li>
+        </ul>
+    </div>
+    
+    <main>
+        <div id="page-home" class="page-container">
+            <div class="hero">
+                <h1>OBJEK PEMBELAJARAN DIGITAL (OPD)</h1>
+                <h2>Alat Berfikir Cemerlang (ABC)</h2>
+                <p>Sistem pengajian pintar berpusatkan murid untuk meningkatkan keupayaan berfikir aras tinggi (KBAT) secara estetik dalam subjek Bahasa Melayu.</p>
+                <button class="btn btn-primary" onclick="showPage('abc1')">Mula Meneroka Modul</button>
+            </div>
+            <div class="card-grid">
+                <div class="abc-card c-1">
+                    <div>
+                        <div class="card-meta">ABC 1</div>
+                        <h3>SWOT</h3>
+                        <p>Analisis Kekuatan, Kelemahan, Peluang, dan Ancaman strategik.</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="showPage('abc1')">TEROKAI</button>
+                </div>
+                <div class="abc-card c-2">
+                    <div>
+                        <div class="card-meta">ABC 2</div>
+                        <h3>PAL</h3>
+                        <p>Rantaian kausaliti mengupas Punca, Akibat, dan Langkah isu.</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="showPage('abc2')">TEROKAI</button>
+                </div>
+                <div class="abc-card c-3">
+                    <div>
+                        <div class="card-meta">ABC 3</div>
+                        <h3>PMI</h3>
+                        <p>Penilaian kritis elemen Kebaikan (Plus), Keburukan (Minus), dan Menarik.</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="showPage('abc3')">TEROKAI</button>
+                </div>
+                <div class="abc-card c-4">
+                    <div>
+                        <div class="card-meta">ABC 4</div>
+                        <h3>SMB</h3>
+                        <p>Soalan Mendaki Bukit berasaskan aras Taksonomi Bloom Semakan.</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="showPage('abc4')">TEROKAI</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="page-abc1" class="page-container">
+            <div class="page-header-box"><h2>ABC 1: Analisis SWOT</h2><div class="sub">Kekuatan • Kelemahan • Peluang • Ancaman</div></div>
+            <div class="theory-layout">
+                <div class="theory-main-card">
+                    <div class="content-section"><h3><i class="fa-solid fa-compass"></i> Maksud & Objektif</h3><p>SWOT melatih murid mencerakin situasi teks pemahaman kepada faktor dalaman dan luaran.</p></div>
+                    <div class="content-section"><h3><i class="fa-solid fa-layer-group"></i> Komponen SWOT</h3>
+                        <ul>
+                            <li><strong>S (Strengths):</strong> Kekuatan dalaman yang memberi impak kelebihan.</li>
+                            <li><strong>W (Weaknesses):</strong> Kelemahan dalaman yang mengehadkan potensi.</li>
+                            <li><strong>O (Opportunities):</strong> Peluang luaran yang boleh dimanfaatkan.</li>
+                            <li><strong>T (Threats):</strong> Ancaman risiko luaran yang mencabar kestabilan.</li>
+                        </ul>
+                    </div>
+                    <div class="content-section"><h3><i class="fa-solid fa-graduation-cap"></i> Contoh PdP Bahasa Melayu</h3>
+                        <div class="pdp-box"><strong>Tema: Amalan Hijau</strong><br>S: Kesedaran murid tinggi. W: Ketiadaan tong kitar kategori. O: Insentif swasta. T: Sikap konsumerisme tegar.</div>
+                    </div>
+                    <div class="content-section"><h3><i class="fa-solid fa-star"></i> Kepentingan</h3><p>Memastikan murid merangka idea ulasan karangan perbincangan secara objektif dan seimbang.</p></div>
+                    <div class="step-navigation-footer"><button class="btn btn-secondary" onclick="showPage('home')">Home</button><button class="btn btn-primary" onclick="showPage('abc2')">Next: ABC 2</button></div>
+                </div>
+                <div class="sticky-sidebar"><h4>Aktiviti</h4><div class="sidebar-buttons"><button class="btn btn-primary" onclick="openQuiz('abc1')">📘 KUIZ</button><button class="btn btn-secondary" onclick="openAssessment('abc1')">📝 PENILAIAN</button></div></div>
+            </div>
+        </div>
+        
+        <div id="page-abc2" class="page-container">
+            <div class="page-header-box"><h2>ABC 2: Formula PAL</h2><div class="sub">Punca • Akibat • Langkah</div></div>
+            <div class="theory-layout">
+                <div class="theory-main-card">
+                    <div class="content-section"><h3><i class="fa-solid fa-compass"></i> Maksud & Fungsi</h3><p>PAL ialah alat kognitif membimbing murid menstrukturkan huraian sebab dan kesan fenomena sosial.</p></div>
+                    <div class="content-section"><h3><i class="fa-solid fa-graduation-cap"></i> Contoh Penggunaan</h3>
+                        <div class="pdp-box"><strong>Isu: Ketagihan Peranti</strong><br>Punca: Kurang pengawasan ibu bapa. Akibat: Menjejaskan fokus akademik. Langkah: Penetapan jadual skrin digital yang ketat.</div>
+                    </div>
+                    <div class="content-section"><h3><i class="fa-solid fa-star"></i> Kepentingan</h3><p>Menjamin perenggan karangan Bahagian B mempunyai koheren berpaksikan prinsip kausaliti sains.</p></div>
+                    <div class="step-navigation-footer"><button class="btn btn-secondary" onclick="showPage('abc1')">Prev</button><button class="btn btn-primary" onclick="showPage('abc3')">Next: ABC 3</button></div>
+                </div>
+                <div class="sticky-sidebar"><h4>Aktiviti</h4><div class="sidebar-buttons"><button class="btn btn-primary" onclick="openQuiz('abc2')">📘 KUIZ</button><button class="btn btn-secondary" onclick="openAssessment('abc2')">📝 PENILAIAN</button></div></div>
+            </div>
+        </div>
+        
+        <div id="page-abc3" class="page-container">
+            <div class="page-header-box"><h2>ABC 3: Strategi PMI</h2><div class="sub">Plus • Minus • Interesting</div></div>
+            <div class="theory-layout">
+                <div class="theory-main-card">
+                    <div class="content-section"><h3><i class="fa-solid fa-compass"></i> Maksud & Langkah</h3><p>PMI ciptaan Edward de Bono mengajak minda melihat idea ekstrem secara lateral sebelum menghukum.</p></div>
+                    <div class="content-section"><h3><i class="fa-solid fa-layer-group"></i> Tiga Sudut Pandang</h3><p>Plus (Kelebihan), Minus (Risiko/Keburukan), dan Interesting (Keunikan tersendiri/Potensi masa depan).</p></div>
+                    <div class="content-section"><h3><i class="fa-solid fa-graduation-cap"></i> Contoh PdP</h3>
+                        <div class="pdp-box"><strong>Idea: Pemansuhan Beg Buku Fizikal</strong><br>Plus: Kurang beban fizikal beg murid. Minus: Kos peranti e-book tinggi. Interesting: Lahirnya budaya celik IT digital lebih awal.</div>
+                    </div>
+                    <div class="step-navigation-footer"><button class="btn btn-secondary" onclick="showPage('abc2')">Prev</button><button class="btn btn-primary" onclick="showPage('abc4')">Next: ABC 4</button></div>
+                </div>
+                <div class="sticky-sidebar"><h4>Aktiviti</h4><div class="sidebar-buttons"><button class="btn btn-primary" onclick="openQuiz('abc3')">📘 KUIZ</button><button class="btn btn-secondary" onclick="openAssessment('abc3')">📝 PENILAIAN</button></div></div>
+            </div>
+        </div>
+        
+        <div id="page-abc4" class="page-container">
+            <div class="page-header-box"><h2>ABC 4: Soalan Mendaki Bukit (SMB)</h2><div class="sub">Taksonomi Bloom Semakan Semula</div></div>
+            <div class="theory-layout">
+                <div class="theory-main-card">
+                    <div class="content-section"><h3><i class="fa-solid fa-compass"></i> Konsep Bukit Kognitif</h3><p>SMB menstrukturkan penulisan berturutan dari asas kognitif rendah (dasar) ke aras cipta (puncak bukit).</p></div>
+                    <div class="content-section"><h3><i class="fa-solid fa-chart-area"></i> Piramid Taksonomi Bloom</h3>
+                        <div class="pyramid-wrapper">
+                            <div class="tier t-6">Aras 6: Mencipta (Puncak)</div>
+                            <div class="tier t-5">Aras 5: Menilai</div>
+                            <div class="tier t-4">Aras 4: Menganalisis</div>
+                            <div class="tier t-3">Aras 3: Mengaplikasi</div>
+                            <div class="tier t-2">Aras 2: Memahami</div>
+                            <div class="tier t-1">Aras 1: Mengingat (Dasar)</div>
+                        </div>
+                    </div>
+                    <div class="content-section"><h3><i class="fa-solid fa-star"></i> Kepentingan</h3><p>Mendorong transisi keupayaan berfikir murid daripada LOTS ke HOTS secara berpandu dan sistematik.</p></div>
+                    <div class="step-navigation-footer"><button class="btn btn-secondary" onclick="showPage('abc3')">Prev</button><button class="btn btn-secondary" onclick="showPage('home')">Back Home</button></div>
+                </div>
+                <div class="sticky-sidebar"><h4>Aktiviti</h4><div class="sidebar-buttons"><button class="btn btn-primary" onclick="openQuiz('abc4')">📘 KUIZ</button><button class="btn btn-secondary" onclick="openAssessment('abc4')">📝 PENILAIAN</button></div></div>
+            </div>
+        </div>
+        
+        <div id="quiz-subpage" class="page-container">
+            <div class="page-header-box"><h2 id="q-title">Kuiz</h2><div class="sub">Uji Pemikiran Kognitif Modul</div></div>
+            <div class="quiz-container">
+                <div class="quiz-status-bar"><div class="quiz-status-meta"><span id="q-count">Dijawab: 0 / 10</span><span id="q-pct">0%</span></div><div class="progress-bar-bg"><div class="progress-bar-fill" id="q-bar"></div></div></div>
+                <div id="q-target"></div>
+                <div class="score-view-box" id="q-scoreboard"><h4>Keputusan</h4><div class="score-num" id="q-score">0 / 10</div><p id="q-msg"></p></div>
+                <div class="step-navigation-footer"><button class="btn btn-secondary" onclick="returnToModule()">Teori</button><button class="btn btn-primary" id="q-sub-btn" onclick="gradeQuiz()">Semak</button><button class="btn btn-secondary" id="q-retry-btn" onclick="restartQuiz()" style="display:none">Cuba Lagi</button></div>
+            </div>
+        </div>
+        
+        <div id="assessment-subpage" class="page-container">
+            <div class="page-header-box"><h2 id="a-title">Penilaian Amali</h2><div class="sub">Aktiviti Interaktif Aplikasi</div></div>
+            <div class="assessment-container">
+                <div class="pdp-box" id="a-prompt" style="margin-bottom:20px"></div>
+                <form onsubmit="handleAsmtSubmit(event)">
+                    <div class="input-group">
+                        <label>Masukkan Jawapan Esei Anda:</label>
+                        <textarea id="a-text" required placeholder="Tulis hujah anda mengikut format unit alat berfikir..."></textarea>
+                    </div>
+                    <div class="step-navigation-footer"><button class="btn btn-secondary" type="button" onclick="returnToModule()">Teori</button><button class="btn btn-primary" type="submit">Hantar Tugasan</button></div>
+                </form>
+            </div>
+        </div>
+    </main>
+    
+    <div class="modal-overlay" id="popup"><div class="modal-window"><div class="modal-icon-container"><i class="fa-solid fa-check"></i></div><h3>Hantaran Diterima!</h3><p>Refleksi tugasan amali anda telah selamat direkodkan ke sistem frontend web.</p><button class="btn btn-primary" onclick="closePopup()">Tutup</button></div></div>
+    
+    <footer><div>Objek Pembelajaran Digital (OPD) • Alat Berfikir Cemerlang (ABC)</div><div style="opacity:0.6; margin-top:5px">&copy; 2026 Dibangunkan eksklusif untuk pembelajaran Bahasa Melayu.</div></footer>
+    
+    <script>
+        const db = {
+            abc1: [
+                {q:"Apakah maksud huruf 'S' dalam SWOT?", o:["Sintesis","Semantik","Strengths (Kekuatan)","Sistem"], a:2},
+                {q:"Manakah elemen penilaian persekitaran LUARAN?", o:["Kekuatan & Kelemahan","Peluang & Ancaman","Kekuatan & Peluang","Kelemahan & Ancaman"], a:1},
+                {q:"Kekurangan bahan rujukan fizikal sekolah dikelaskan sebagai...", o:["Kekuatan","Kelemahan","Peluang","Ancaman"], a:1},
+                {q:"Peluang (Opportunities) menilai faktor...", o:["Dalaman positif","Dalaman negatif","Luaran positif","Luaran negatif"], a:2},
+                {q:"Ancaman (Threats) diwakili faktor persekitaran...", o:["Dalaman diri","Luaran yang berisiko","Bantuan dana","Kelebihan sistem"], a:1},
+                {q:"Mengapa SWOT penting untuk ulasan Bahasa Melayu?", o:["Mendekkan esei","Melatih ulasan seimbang & holistik","Menghafal perkataan","Buang format"], a:1},
+                {q:"Sekolah mendapat tajaan ganjaran IT swasta merupakan...", o:["Kekuatan","Kelemahan","Peluang","Ancaman"], a:2},
+                {q:"Kuadran SWOT manakah menilai faktor positif dalaman?", o:["Strengths","Weaknesses","Opportunities","Threats"], a:0},
+                {q:"Apakah tindakan terbaik selepas tahu kelemahan diri?", o:["Biar sahaja","Rangka intervensi pembetulan","Tukar subjek","Merungut"], a:1},
+                {q:"SWOT diadaptasi daripada domain sains pengurusan...", o:["Sisa","Kewangan","Perancangan Strategik","Sukan"], a:2}
+            ],
+            abc2: [
+                {q:"Apakah maksud akronim alat berfikir PAL?", o:["Pemerhatian, Analisis, Laporan","Punca, Akibat, Langkah","Penceritaan, Aplikasi, Latihan","Panduan, Arahan, Lampiran"], a:1},
+                {q:"Komponen 'Punca' menjawab soalan kritis...", o:["Bagaimana solusi?","Apakah kesan?","Mengapa ia berlaku?","Bila terjadi?"], a:2},
+                {q:"Manakah contoh 'Akibat' bagi kes pembuangan sampah sungai?", o:["Undang-undang komposit","Krisis air & hidupan akuatik mati","Kempen cintai sungai","Sikap masyarakat"], a:1},
+                {q:"Komponen 'Langkah' berfokus kepada...", o:["Tuding kesalahan","Kira kos","Cadangan solusi konkrit","Cerita sejarah"], a:2},
+                {q:"Teknik PAL paling sesuai untuk esei...", o:["Cereka khayalan","Perbincangan fakta/isu","Surat tidak rasmi","Sajak"], a:1},
+                {q:"Jika aspek 'Langkah' ditinggalkan, esei akan...", o:["Terlalu panjang","Gagal beri penyelesaian","Dapat markah penuh","Salah format"], a:1},
+                {q:"Sikap remaja memandu tanpa lesen memandu ialah...", o:["Punca","Akibat","Langkah","Rujukan"], a:0},
+                {q:"Masalah obesiti murid ialah 'Akibat' langsung daripada...", o:["Amalan bersukan","Makan tinggi gula & kurang senam","Kempen sihat","Tidur cukup"], a:1},
+                {q:"Ejen pelaksana utama komponen 'Langkah' ialah...", o:["Kerajaan sahaja","Tindakan kolektif bersama masyarakat","Pelancong","Murid sahaja"], a:1},
+                {q:"Bagaimana PAL membantu aliran struktur karangan?", o:["Buat berterabur","Menjamin koheren sebab, kesan, solusi","Buang perenggan","Banyak salah kata"], a:1}
+            ],
+            abc3: [
+                {q:"Apakah maksud huruf 'M' dalam formula PMI?", o:["Medium","Minus (Keburukan/Risiko)","Modul","Metodologi"], a:1},
+                {q:"Apakah peranan utama bahagian 'Interesting' (Menarik)?", o:["Senarai keburukan","Terka potensi unik/luar jangka","Tolak idea terus","Ulang fakta"], a:1},
+                {q:"Siapakah tokoh pemikiran lateral pengasas PMI?", o:["Jean Piaget","Edward de Bono","Benjamin Bloom","Vygotsky"], a:1},
+                {q:"Di bawah lajur 'Plus', murid perlu menulis...", o:["Risiko gagal","Kelebihan & impak positif","Kos bajet","Luahan marah"], a:1},
+                {q:"Mengapa PMI amat bernilai sebelum buat keputusan?", o:["Paksa minda saring idea tanpa emosi","Keputusan siap 1 saat","Tolak pembaharuan","Ikut majoriti"], a:0},
+                {q:"Bincang idea 'Kereta Terbang', manakah aspek 'Minus'?", o:["Jimat masa jalan","Kos senggara mahal & risiko udara","Nampak moden","Kurang sesak"], a:1},
+                {q:"Aspek 'Interesting' bagi 'Sekolah tanpa peperiksaan bertulis'...", o:["Murid ponteng","Lihat cara alternatif ukur bakat","Guru bercuti","Bakar buku"], a:1},
+                {q:"Lajur 'Plus' menilai aspek...", o:["Kerugian","Kebaikan","Neutral","Kritikan"], a:1},
+                {q:"Berapakah dimensi pemikiran dianalisis dalam PMI?", o:["1","2","3 (Plus, Minus, Interesting)","4"], a:2},
+                {q:"Bagaimana PMI membantu ujian lisan bertutur murid?", o:["Buat membisu","Lontar hujah spontan secara matang","Lajukan suara","Tiru dialek"], a:1}
+            ],
+            abc4: [
+                {q:"Apakah asas hubung kait Soalan Mendaki Bukit (SMB)?", o:["Teori Perilaku","Taksonomi Bloom Semakan Semula","Sains Sukan","Teori Visual"], a:1},
+                {q:"Berapakah jumlah tingkatan hierarki kognitif Bloom?", o:["4 aras","5 aras","6 aras","7 aras"], a:2},
+                {q:"Apakah aras kognitif kedudukan PALING DASAR bukit?", o:["Memahami","Mengingat","Mengaplikasi","Mencipta"], a:1},
+                {q:"Manakah kata kerja aksi bagi peringkat tertinggi 'Mencipta'?", o:["Menyatakan","Melabel","Mereka bentuk / Menggubah","Menyalin"], a:2},
+                {q:"Soalan 'Mengapa watak utama belot?' berada pada aras...", o:["Mengingat","Mengaplikasi","Menganalisis","Menghafal"], a:2},
+                {q:"Apakah maksud aras kognitif 'Menilai' (Evaluating)?", o:["Ingat tarikh","Buat pertimbangan berdasarkan kriteria","Bina model","Lukis rajah"], a:1},
+                {q:"Aras kognitif manakah menguji penggunaan konsep dalam situasi baru?", o:["Mengingat","Memahami","Mengaplikasi","Mencipta"], a:2},
+                {q:"Mengapa aras tinggi diibaratkan seperti 'Puncak Bukit'?", o:["Sebab tiada siapa tahu","Sebab perlu pemikiran aras tinggi (KBAT)","Khusus untuk guru","Aktiviti luar"], a:1},
+                {q:"Kata tugas 'Jelaskan maksud frasa guna ayat sendiri' merujuk aras...", o:["Mengingat","Memahami","Mencipta","Menilai"], a:1},
+                {q:"Apakah objektif utama guru merangka SMB di kelas?", o:["Bagi murid gagal","Pandu intelek berperingkat LOTS ke HOTS","Habis silabus pantas","Kurang latihan"], a:1}
+            ]
+        };
+        const prompts = {
+            abc1: "<h4>Amali SWOT:</h4><p>Tulis ulasan SWOT bertemakan 'Pelaksanaan Kelas Digital'. Sediakan sekurang-kurangnya 1 perenggan analitis untuk Kekuatan, Kelemahan, Peluang, dan Ancaman berdasarkan senario masa kini.</p>",
+            abc2: "<h4>Amali PAL:</h4><p>Rangka esei pendek isu 'Pencemaran Alam Sekitar Global'. Kupas terperinci aspek Punca utama, Akibat kemusnahan jangka panjang, dan Langkah bersepadu komuniti.</p>",
+            abc3: "<h4>Amali PMI:</h4><p>Berikan respons kritis idea: 'Waktu persekolahan dipendekkan ke jam 12 tengah hari'. Tulis hujah bersandarkan lajur Plus (Kebaikan), Minus (Keburukan), dan Interesting (Impak unik tersembunyi).</p>",
+            abc4: "<h4>Amali SMB:</h4><p>Bina 3 soalan refleksi berperingkat SMB bertemakan novel tingkatan yang anda pelajari (1 Soalan aras dasar: Mengingat, 1 aras tengah: Mengaplikasi, 1 aras puncak: Menilai).</p>"
+        };
+        let curMod = 'abc1', curQ = [], userAns = {};
+        
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loading-screen');
+                loader.style.opacity = 0; setTimeout(() => loader.style.display = 'none', 400);
+            }, 600); showPage('home');
+        });
+        
+        function showPage(pId) {
+            document.querySelectorAll('.page-container').forEach(p => p.classList.remove('active-page'));
+            const target = document.getElementById(pId) || document.getElementById(`page-${pId}`);
+            if (target) target.classList.add('active-page');
+            document.querySelectorAll('.navbar-links a').forEach(l => l.classList.remove('active-nav'));
+            const aNav = document.getElementById(`nav-${pId}`); if (aNav) aNav.classList.add('active-nav');
+            const crumb = document.getElementById('breadcrumb-active');
+            if (pId === 'home') crumb.innerText = "Dashboard";
+            else if (['abc1','abc2','abc3','abc4'].includes(pId)) crumb.innerText = pId.toUpperCase();
+            else if (pId === 'quiz-subpage') crumb.innerText = `${curMod.toUpperCase()} - Kuiz`;
+            else if (pId === 'assessment-subpage') crumb.innerText = `${curMod.toUpperCase()} - Penilaian`;
+            document.getElementById('nav-menu').classList.remove('mobile-open'); window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        function toggleMobileNav() { document.getElementById('nav-menu').classList.toggle('mobile-open'); }
+        function returnToModule() { showPage(curMod); }
+        
+        function openQuiz(mId) {
+            curMod = mId; curQ = db[mId]; userAns = {};
+            document.getElementById('q-title').innerText = `Kuiz: ${mId.toUpperCase()}`;
+            updateQBar(); document.getElementById('q-scoreboard').style.display = 'none';
+            document.getElementById('q-sub-btn').style.display = 'inline-flex';
+            document.getElementById('q-retry-btn').style.display = 'none';
+            const target = document.getElementById('q-target'); target.innerHTML = '';
+            curQ.forEach((item, idx) => {
+                const card = document.createElement('div'); card.className = 'question-card';
+                let opts = ''; item.o.forEach((o, oIdx) => {
+                    opts += `<label class="option-label" id="l-${idx}-${oIdx}"><input type="radio" name="q-${idx}" value="${oIdx}" onclick="regAns(${idx}, ${oIdx})"><span>${o}</span></label>`;
+                });
+                card.innerHTML = `<div class="question-text">Soalan ${idx + 1}: ${item.q}</div><div class="options-list">${opts}</div>`;
+                target.appendChild(card);
+            }); showPage('quiz-subpage');
+        }
+        
+        function regAns(qIdx, oIdx) { userAns[qIdx] = oIdx; updateQBar(); }
+        
+        function updateQBar() {
+            const ans = Object.keys(userAns).length; const pct = Math.round((ans / 10) * 100);
+            document.getElementById('q-count').innerText = `Dijawab: ${ans} / 10`;
+            document.getElementById('q-pct').innerText = `${pct}%`;
+            document.getElementById('q-bar').style.width = `${pct}%`;
+        }
+        
+        function gradeQuiz() {
+            if (Object.keys(userAns).length < 10) { alert("Sila jawab semua 10 soalan."); return; }
+            let score = 0;
+            curQ.forEach((item, idx) => {
+                const uAns = userAns[idx]; const cAns = item.a;
+                for(let i=0; i<4; i++) {
+                    const el = document.getElementById(`l-${idx}-${i}`);
+                    el.style.background = 'var(--cream)'; el.style.border = 'none';
+                }
+                if (uAns === cAns) { score++; document.getElementById(`l-${idx}-${uAns}`).style.background = '#E8F5E9'; }
+                else { document.getElementById(`l-${idx}-${uAns}`).style.background = '#FFEBEE'; document.getElementById(`l-${idx}-${cAns}`).style.background = '#E8F5E9'; }
+            });
+            const board = document.getElementById('q-scoreboard'); board.style.display = 'block';
+            document.getElementById('q-score').innerText = `${score} / 10`;
+            document.getElementById('q-msg').innerText = score >= 7 ? "Tahniah! Pemahaman anda cemerlang." : "Sila baca nota semula untuk pembaikan.";
+            document.getElementById('q-sub-btn').style.display = 'none';
+            document.getElementById('q-retry-btn').style.display = 'inline-flex';
+            board.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function restartQuiz() { openQuiz(curMod); }
+        
+        function openAssessment(mId) {
+            curMod = mId; document.getElementById('a-title').innerText = `Penilaian Amali: ${mId.toUpperCase()}`;
+            document.getElementById('a-prompt').innerHTML = prompts[mId];
+            document.getElementById('a-text').value = ''; showPage('assessment-subpage');
+        }
+        
+        function handleAsmtSubmit(e) { e.preventDefault(); document.getElementById('popup').classList.add('modal-open'); }
+        function closePopup() { document.getElementById('popup').classList.remove('modal-open'); returnToModule(); }
+    </script>
+</body>
+</html>
